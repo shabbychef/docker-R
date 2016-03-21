@@ -140,7 +140,7 @@ RUN (apt-get update -qq ; \
   apt-get autoremove -qy ; \
   rm -rf /var/lib/apt/lists/* )
 
-CMD ["/usr/local/bin/R"]
+ENTRYPOINT ["/usr/local/bin/R"]
 
 #for vim modeline: (do not edit)
 # vim:et:nu:fdm=marker:fmr=FOLDUP,UNFOLD:cms=#%s:syn=Dockerfile:ft=Dockerfile:fo=croql
