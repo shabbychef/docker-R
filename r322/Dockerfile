@@ -1,5 +1,5 @@
 # 
-# Dockerfile for R3.2.2
+# Dockerfile for R.3.2.2
 #
 # Based on (read _stolen from_) Dockerfiles from rocker, 
 # written by Carl Boettiger and Dirk Eddelbuettel.
@@ -17,9 +17,8 @@ MAINTAINER Steven E. Pav, shabbychef@gmail.com
 
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
-ENV R_BASE_VERSION R3.2.2
-ENV R_SVN_TAG R3-2-2
-
+ENV R_BASE_VERSION R.3.2.2
+ENV R_SVN_TAG R-3-2-2
 
 RUN (apt-get update -qq ; \
   DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -q -y --no-install-recommends \
@@ -70,11 +69,10 @@ RUN (apt-get update -qq ; \
   xdg-utils \
   xfonts-base \
   xvfb \
-  zlib1g-dev )
-
-RUN (mkdir -p /tmp/build ; \
+  zlib1g-dev ; \
+  mkdir -p /tmp/build ; \
   cd /tmp/build ; \
-  svn co http://svn.r-project.org/R/tags/R3-2-2/ Rsrc ; \
+  svn co http://svn.r-project.org/R/tags/R-3-2-2/ Rsrc ; \
   cd /tmp/build/Rsrc ; \
     R_PAPERSIZE=letter \
     R_BATCHSAVE="--no-save --no-restore" \
@@ -120,7 +118,6 @@ RUN (mkdir -p /tmp/build ; \
   libreadline-dev \
   libtiff5-dev \
   libxft-dev \
-  r-base-dev \
   tcl8.6-dev \
   texlive-base \
   texlive-fonts-recommended \

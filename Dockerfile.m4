@@ -81,9 +81,8 @@ RUN (apt-get update -qq ; \
   xdg-utils \
   xfonts-base \
   xvfb \
-  zlib1g-dev )
-
-RUN (mkdir -p /tmp/build ; \
+  zlib1g-dev ; \
+  mkdir -p /tmp/build ; \
   cd /tmp/build ; \
   svn co http://svn.r-project.org/R/tags/DASHTAG/ Rsrc ; \
   cd /tmp/build/Rsrc ; \
@@ -131,7 +130,6 @@ RUN (mkdir -p /tmp/build ; \
   libreadline-dev \
   libtiff5-dev \
   libxft-dev \
-  r-base-dev \
   tcl8.6-dev \
   texlive-base \
   texlive-fonts-recommended \
