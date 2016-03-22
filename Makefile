@@ -21,7 +21,7 @@ default : all
 
 .PHONY   : all build versions
 .SUFFIXES: 
-.PRECIOUS: 
+.PRECIOUS: %.built
 
 ############ BUILD RULES ############
 
