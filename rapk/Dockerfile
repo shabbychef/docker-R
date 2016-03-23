@@ -75,11 +75,17 @@ ENV R_SVN_TAG R-3-2-4
 ENV TEXI2DVI_USE_RECORDER yes
 
 # cf https://github.com/vvakame/docker-review/issues/3
-RUN (cd /usr/share ; \
-  rm -rf texmf-dist ; \
-  svn co svn://tug.org/texlive/trunk/Master/texmf-dist ; \
-  mktexlsr ; \
-  fmtutil-sys --all )
+#RUN (cd /usr/share ; \
+  #rm -rf texmf-dist ; \
+  #svn co svn://tug.org/texlive/trunk/Master/texmf-dist ; \
+  #mktexlsr ; \
+  #fmtutil-sys --all )
+
+RUN (mkdir -p /opt/texmf/scripts ; \
+  cd /opt/texmf/scripts ; \
+  svn co svn://tug.org/texlive/trunk/Master/texmf-dist/scripts/texlive texlive )
+
+ENV PERL5LIB /opt/texmf/scripts/texlive
 
 RUN (mkdir -p /usr/local/lib ; \
   mkdir -p /tmp/build ; \
