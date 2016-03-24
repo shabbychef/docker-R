@@ -15,17 +15,15 @@ VERSFILES 				:= $(patsubst %/Dockerfile,%/.version,$(DOCKERFILES))
 
 ############## DEFAULT ##############
 
-default : all 
+default : dockerfiles
 
 ############## MARKERS ##############
 
-.PHONY   : all build versions
+.PHONY   : dockerfiles buildfiles versions
 .SUFFIXES: 
 .PRECIOUS: %.built
 
 ############ BUILD RULES ############
-
-all : $(DOCKERFILES)
 
 r321/Dockerfile : Dockerfile.m4
 	@mkdir -p $(@D)
@@ -43,10 +41,12 @@ r324/Dockerfile : Dockerfile.m4
 	@mkdir -p $(@D)
 	m4 -DTAG=R.3.2.4 $< > $@
 
+dockerfiles : $(DOCKERFILES)
+
 $(BUILDFILES) : %/.built : %/Dockerfile
 	docker build --rm -t shabbychef/$* $(@D)
 
-build : $(BUILDFILES)
+buildfiles : $(BUILDFILES)
 
 $(VERSFILES) : %/.version : %/.built
 	docker run -it --rm shabbychef/$* "--version" > $@

@@ -136,7 +136,69 @@ RUN (apt-get update -qq ; \
   texlive-generic-recommended \
   texlive-latex-base \
   texlive-latex-recommended \
-  tk8.6-dev ; \
+  tk8.6-dev \
+  adwaita-icon-theme \
+  bash-completion\
+  binutils      \
+  bison        \
+  bzip2 \
+  cpp          \
+  cpp-5        \
+  dash         \
+  default-jdk  \
+  default-jre  \
+  default-jre-headless \
+  diffutils \
+  ed          \
+  file       \
+  findutils  \
+  fontconfig \
+  g++        \
+  g++-5      \
+  gcc        \
+  gcc-4.8-base\
+  gcc-4.9-base\
+  gcc-5     \
+  gcc-5-base\
+  gnupg      \
+  gpgv       \
+  grep \
+  inetutils-ping \ 
+  iproute2 \
+  m4         \
+  make       \
+  man-db     \
+  mawk       \
+  mpack      \
+  perl       \
+  perl-base  \
+  perl-modules-5 \
+  python         \
+  python2.7-minimal \
+  sed           \
+  subversion    \
+  tar           \
+  tcl8.6        \
+  tex-common    \
+  texinfo       \
+  tk8.6         \
+  wget          \
+  x11-common    \
+  x11-utils     \
+  x11-xkb-utils \
+  xdg-utils     \
+  x11proto-core-dev \
+  x11proto-input-dev \
+  x11proto-kb-dev \
+  xauth \
+  xkb-data \
+  xorg-sgml-doctools \
+  xtrans-dev \
+  xfonts-base   \
+  xfonts-encoding\
+  xfonts-utils  \
+  xvfb \
+  xserver-common ;\
   apt-get autoremove -qy ; \
   rm -rf /var/lib/apt/lists/* )
 
