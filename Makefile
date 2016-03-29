@@ -15,15 +15,23 @@ VERSFILES 				:= $(patsubst %/Dockerfile,%/.version,$(DOCKERFILES))
 
 ############## DEFAULT ##############
 
-default : dockerfiles
+.DEFAULT_GOAL 	:= help
 
 ############## MARKERS ##############
 
+.PHONY   : help
 .PHONY   : dockerfiles buildfiles versions
 .SUFFIXES: 
 .PRECIOUS: %.built
 
 ############ BUILD RULES ############
+
+help:  ## generate this help message
+	@grep -E '^([a-zA-Z_-]+\s*)+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+rtag/Dockerfile : Dockerfile.m4
+	@mkdir -p $(@D)
+	m4 -DTAG=R.3.2.1 $< > $@
 
 r321/Dockerfile : Dockerfile.m4
 	@mkdir -p $(@D)
@@ -41,17 +49,17 @@ r324/Dockerfile : Dockerfile.m4
 	@mkdir -p $(@D)
 	m4 -DTAG=R.3.2.4 $< > $@
 
-dockerfiles : $(DOCKERFILES)
+dockerfiles : $(DOCKERFILES) rtag/Dockerfile ## generate the Dockerfiles from macro 
 
 $(BUILDFILES) : %/.built : %/Dockerfile
 	docker build --rm -t shabbychef/$* $(@D)
 
-buildfiles : $(BUILDFILES)
+buildfiles : $(BUILDFILES) ## build the Docker images
 
 $(VERSFILES) : %/.version : %/.built
 	docker run -it --rm shabbychef/$* "--version" > $@
 
-versions : $(VERSFILES)
+versions : $(VERSFILES) ## run the Docker images to get R versions
 
 #for vim modeline: (do not edit)
 # vim:ts=2:sw=2:tw=79:fdm=marker:fmr=FOLDUP,UNFOLD:cms=#%s:tags=.tags;:syn=make:ft=make:ai:si:cin:nu:fo=croqt:cino=p0t0c5(0:
