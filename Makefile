@@ -11,11 +11,12 @@ R_DOTVERSIONS 		 = 3.2.1 3.2.2 3.2.3 3.2.4 3.2.5
 R_VERSIONS 				 = $(subst .,,$(R_DOTVERSIONS))
 DOCKERFILES 			:= $(patsubst %,r%/Dockerfile,$(R_VERSIONS))
 BUILDFILES 				:= $(patsubst %/Dockerfile,%/.built,$(DOCKERFILES))
+PUSHFILES 				:= $(patsubst %/Dockerfile,%/.pushed,$(DOCKERFILES))
 VERSFILES 				:= $(patsubst %/Dockerfile,%/.version,$(DOCKERFILES))
 
 ############## DEFAULT ##############
 
-default : dockerfiles
+.DEFAULT_GOAL 	:= help
 
 ############## MARKERS ##############
 
@@ -49,17 +50,25 @@ r325/Dockerfile : Dockerfile.m4
 	@mkdir -p $(@D)
 	m4 -DTAG=R.3.2.5 $< > $@
 
-dockerfiles : $(DOCKERFILES)  ## make all dockerfiles
+dockerfiles : $(DOCKERFILES) ## generate the Dockerfiles from macro 
 
 $(BUILDFILES) : %/.built : %/Dockerfile
 	docker build --rm -t shabbychef/$* $(@D)
+	docker build --rm -t shabbychef/rminimal:$$(echo '$*' | perl -pe 's/^.+(\d)(\d)(\d)/$$1.$$2.$$3/;') $(@D)
+	touch $@
 
-buildfiles : $(BUILDFILES)  ## build all docker images
+buildfiles : $(BUILDFILES) ## build the Docker images
+
+$(PUSHFILES) : %/.pushed : %/.built
+	docker push shabbychef/rminimal:$$(echo '$*' | perl -pe 's/^.+(\d)(\d)(\d)/$$1.$$2.$$3/;') 
+	touch $@
+
+pushfiles : $(PUSHFILES) ## push the Docker images to docker hub
 
 $(VERSFILES) : %/.version : %/.built
 	docker run -it --rm shabbychef/$* "--version" > $@
 
-versions : $(VERSFILES)  ## run all docker images, dumping R version numbers
+versions : $(VERSFILES) ## run the Docker images to get R versions
 
 #for vim modeline: (do not edit)
 # vim:ts=2:sw=2:tw=79:fdm=marker:fmr=FOLDUP,UNFOLD:cms=#%s:tags=.tags;:syn=make:ft=make:ai:si:cin:nu:fo=croqt:cino=p0t0c5(0:

@@ -200,6 +200,8 @@ RUN (apt-get update -qq ; \
   xvfb \
   xserver-common ;\
   apt-get autoremove -qy ; \
+  R --version ; \
+  dpkg-query -l ; \
   rm -rf /var/lib/apt/lists/* )
 
 ENTRYPOINT ["/usr/local/bin/R"]
