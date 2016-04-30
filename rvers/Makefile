@@ -18,6 +18,11 @@ BUILDFILES 				:= $(patsubst %/Dockerfile,%/.built,$(DOCKERFILES))
 PUSHFILES 				:= $(patsubst %/Dockerfile,%/.pushed,$(DOCKERFILES))
 VERSFILES 				:= $(patsubst %/Dockerfile,%/.version,$(DOCKERFILES))
 
+
+DOCKER 						?= docker
+
+UPSTREAM_NAME 		 = rvers
+
 ############## DEFAULT ##############
 
 .DEFAULT_GOAL 	:= help
@@ -100,21 +105,22 @@ dockerfiles : $(DOCKERFILES) ## generate the Dockerfiles from macro
 
 dockerignorefiles : $(DOCKERIGNOREFILES) ## generate all the .dockerignore files
 
+#$(DOCKER) build --rm -t shabbychef/$* $(@D)
+
 $(BUILDFILES) : %/.built : %/Dockerfile
-	docker build --rm -t shabbychef/$* $(@D)
-	docker build --rm -t shabbychef/rshared:$$(echo '$*' | perl -pe 's/^.+(\d)(\d)(\d)/$$1.$$2.$$3/;') $(@D)
+	$(DOCKER) build --rm -t shabbychef/$(UPSTREAM_NAME):$$(echo '$*' | perl -pe 's/^.+(\d)(\d)(\d)/$$1.$$2.$$3/;') $(@D)
 	touch $@
 
 buildfiles : $(BUILDFILES) ## build the Docker images
 
 $(PUSHFILES) : %/.pushed : %/.built
-	docker push shabbychef/rshared:$$(echo '$*' | perl -pe 's/^.+(\d)(\d)(\d)/$$1.$$2.$$3/;') 
+	$(DOCKER) push shabbychef/$(UPSTREAM_NAME):$$(echo '$*' | perl -pe 's/^.+(\d)(\d)(\d)/$$1.$$2.$$3/;') 
 	touch $@
 
 pushfiles : $(PUSHFILES) ## push the Docker images to docker hub
 
 $(VERSFILES) : %/.version : %/.built
-	docker run -it --rm shabbychef/$* "--version" > $@
+	$(DOCKER) run -it --rm shabbychef/$* "--version" > $@
 
 versions : $(VERSFILES) ## run the Docker images to get R versions
 
