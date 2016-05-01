@@ -8,9 +8,9 @@
 ############### FLAGS ###############
 
 # c.f. https://cran.r-project.org/bin/windows/base/old/
-R_DOTVERSIONS 		 = 3.0.0 3.0.1 3.0.2 3.0.3 
+R_DOTVERSIONS 		 = 3.2.0 3.2.1 3.2.2 3.2.3 3.2.4 3.2.5
 R_DOTVERSIONS 		+= 3.1.0 3.1.1 3.1.2 3.1.3 
-R_DOTVERSIONS 		+= 3.2.0 3.2.1 3.2.2 3.2.3 3.2.4 3.2.5
+R_DOTVERSIONS 		+= 3.0.0 3.0.1 3.0.2 3.0.3 
 R_VERSIONS 				 = $(subst .,,$(R_DOTVERSIONS))
 DOCKERFILES 			:= $(patsubst %,r%/Dockerfile,$(R_VERSIONS))
 DOCKERIGNOREFILES 	:= $(patsubst %,r%/.dockerignore,$(R_VERSIONS))
