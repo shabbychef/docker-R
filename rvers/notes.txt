@@ -1,0 +1,14 @@
+
+Docker CRAN-check is a hellride.
+
+
+* use [libPaths](http://stackoverflow.com/a/2615143/164611)
+* [libPaths](https://stat.ethz.ch/R-manual/R-devel/library/base/html/libPaths.html)
+and environment variables.
+* more [path fun](http://r.789695.n4.nabble.com/Renviron-settings-for-Linux-Distributions-please-tell-me-R-Core-s-advice-td2243789.html)
+from the Ubuntu deb packager.
+* the [guts of travis](https://github.com/craigcitro/r-travis/blob/6712e9e8dd0e45865448c118ce6c3e49a843783a/scripts/travis-tool.sh)
+* Y U NO [URL check?](https://stat.ethz.ch/pipermail/r-package-devel/2015q4/000608.html)
+* dunno. [RTFM](https://cran.r-project.org/web/packages/URL_checks.html)
+
+
