@@ -21,7 +21,7 @@ VERSFILES 				:= $(patsubst %/Dockerfile,%/.version,$(DOCKERFILES))
 
 DOCKER 						?= docker
 
-UPSTREAM_NAME 		 = rvers
+UPSTREAM_NAME 		 = rtag
 
 ############## DEFAULT ##############
 

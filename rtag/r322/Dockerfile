@@ -1,24 +1,12 @@
-dnl FML m4 edition
-dnl this gets translated into a Dockerfile
-dnl with the TAG filled in.
-dnl do not overdefine anything else
-dnl without quoting it first.
-dnl
-define(`DOTTAG',TAG)dnl
-define(`DASHTAG',patsubst(DOTTAG,`\.',`-'))dnl
-define(`SQUASHTAG',translit(patsubst(DOTTAG,`\.',`'),`A-Z',`a-z'))dnl
-define(`LOCAL_CFLAGS',esyscmd(sh -c "R CMD config CFLAGS | tr -d '\n'"))dnl
-define(`LOCAL_CXXFLAGS',esyscmd(sh -c "R CMD config CXXFLAGS | tr -d '\n'"))dnl
 # 
-`#' Dockerfile for DOTTAG
+# Dockerfile for R.3.2.2
 #
 # with a view towards shared common base with other versions?
 #
 # Based on (read _stolen from_) Dockerfiles from rocker, 
 # written by Carl Boettiger and Dirk Eddelbuettel.
 #
-`#' docker build --rm -t shabbychef/`maximal'SQUASHTAG . 
-changequote(`<<<',`>>>')dnl
+# docker build --rm -t shabbychef/maximalr322 . 
 #
 # Created: 2016.04.27
 # Copyright: Steven E. Pav, 2016
@@ -95,13 +83,13 @@ RUN (apt-get update -qq ; \
   ghostscript \
   qpdf ;)
 
-ENV R_BASE_VERSION DOTTAG
-ENV R_SVN_TAG DASHTAG
+ENV R_BASE_VERSION R.3.2.2
+ENV R_SVN_TAG R-3-2-2
 ENV R_LIBS_SITE /usr/lib/R/site-library
 
 RUN (mkdir -p /tmp/build ; \
   cd /tmp/build ; \
-  svn co http://svn.r-project.org/R/tags/DASHTAG/ Rsrc ; \
+  svn co http://svn.r-project.org/R/tags/R-3-2-2/ Rsrc ; \
   cd /tmp/build/Rsrc ; \
     R_PAPERSIZE=letter \
     R_BATCHSAVE="--no-save --no-restore" \
@@ -113,8 +101,8 @@ RUN (mkdir -p /tmp/build ; \
     R_PRINTCMD=/usr/bin/lpr \
     LIBnn=lib \
     AWK=/usr/bin/awk \
-    CFLAGS="LOCAL_CFLAGS" \
-    CXXFLAGS="LOCAL_CXXFLAGS" \
+    CFLAGS="-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -g" \
+    CXXFLAGS="-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -g" \
     ./configure --enable-R-shlib \
             --without-blas \
             --without-lapack \
@@ -153,15 +141,15 @@ RUN (mkdir -p /tmp/build ; \
   rm -rf /var/lib/apt/lists/* ; \
   R --version )
 
-ENV NONCE_LIBLOC /usr/local/lib/R/library
+ENV RINST_LIBLOC /usr/local/lib/R/site-library
 
 RUN (echo "install littler" ; \
   mkdir -p $R_LIBS_SITE ; \
   R -e 'install.packages("littler")' ; \
-  [ -f /usr/local/bin/r ] || ln -s ${NONCE_LIBLOC}/littler/bin/r /usr/local/bin/r ; \
-  [ -f /usr/local/bin/install.r ] || ln -s ${NONCE_LIBLOC}/littler/examples/install.r /usr/local/bin/install.r ; \
-  [ -f /usr/local/bin/install2.r ] || ln -s ${NONCE_LIBLOC}/littler/examples/install2.r /usr/local/bin/install2.r ; \
-  [ -f /usr/local/bin/installGithub.r ] || ln -s ${NONCE_LIBLOC}/littler/examples/installGithub.r /usr/local/bin/installGithub.r )
+  [ -f /usr/local/bin/r ] || ln -s ${RINST_LIBLOC}/littler/bin/r /usr/local/bin/r ; \
+  [ -f /usr/local/bin/install.r ] || ln -s ${RINST_LIBLOC}/littler/examples/install.r /usr/local/bin/install.r ; \
+  [ -f /usr/local/bin/install2.r ] || ln -s ${RINST_LIBLOC}/littler/examples/install2.r /usr/local/bin/install2.r ; \
+  [ -f /usr/local/bin/installGithub.r ] || ln -s ${RINST_LIBLOC}/littler/examples/installGithub.r /usr/local/bin/installGithub.r )
 
 ENTRYPOINT ["/usr/local/bin/R"]
 
